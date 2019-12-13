@@ -26,6 +26,7 @@ dependencies:
   http: any
   provider: ^3.2.0
   rxdart: ^0.22.6
+  async: ^2.3.0
 
 dev_dependencies:
   flutter_test:

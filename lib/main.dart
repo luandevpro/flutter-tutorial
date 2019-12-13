@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertutorial/models/faves.dart';
-import 'package:fluttertutorial/models/films.dart';
-import 'package:fluttertutorial/pages/faves_page.dart';
-import 'package:fluttertutorial/pages/films_page.dart';
-import 'package:provider/provider.dart';
+import 'package:fluttertutorial/models/posts.dart';
+import 'package:fluttertutorial/pages/post_page.dart';
 
 void main() => runApp(Application());
 
@@ -13,56 +10,50 @@ class Application extends StatefulWidget {
 }
 
 class _ApplicationState extends State<Application> {
-  int _currentPage = 0;
-  final _appBarTitle = [
-    Text("Films"),
-    Text("Faves"),
-  ];
-  final _optionPages = [
-    FilmsPage(),
-    FavesPage(),
-  ];
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider<FilmsModel>(
-          create: (_) => FilmsModel(),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primarySwatch: Colors.indigo,
+      ),
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text("API Tutorial"),
+          backgroundColor: Colors.indigo,
         ),
-        ChangeNotifierProxyProvider<FilmsModel, FavesModel>(
-          builder: (context, films, previousFaves) =>
-              FavesModel(films, previousFaves),
-        ),
-      ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primarySwatch: Colors.indigo,
-        ),
-        home: Scaffold(
-          appBar: AppBar(
-            title: _appBarTitle[_currentPage],
-            backgroundColor: Colors.indigo,
-          ),
-          body: _optionPages[_currentPage],
-          bottomNavigationBar: BottomNavigationBar(
-            currentIndex: _currentPage,
-            items: [
-              BottomNavigationBarItem(
-                title: Text("Films"),
-                icon: Icon(Icons.movie),
-              ),
-              BottomNavigationBarItem(
-                title: Text("Faves"),
-                icon: Icon(Icons.star),
-              ),
-            ],
-            onTap: (index) {
-              setState(() {
-                _currentPage = index;
-              });
-            },
-          ),
+        body: FutureBuilder(
+          future: fetchPosts(),
+          builder: (ctx, snapshot) {
+            if (snapshot.hasData) {
+              return ListView.builder(
+                itemCount: snapshot.data.length,
+                itemBuilder: (ctx, index) {
+                  return ListTile(
+                    title: Text(
+                      "${snapshot.data[index].title}",
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    leading: CircleAvatar(
+                      child: Text("${snapshot.data[index].id}"),
+                    ),
+                    onTap: () {
+                      Navigator.push(
+                        ctx,
+                        MaterialPageRoute(
+                          builder: (ctx) => PostPage(snapshot.data[index].id),
+                        ),
+                      );
+                    },
+                  );
+                },
+              );
+            } else {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          },
         ),
       ),
     );
