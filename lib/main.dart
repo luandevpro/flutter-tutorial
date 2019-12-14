@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertutorial/models/posts.dart';
+import 'package:fluttertutorial/models/post.dart';
 import 'package:fluttertutorial/pages/post_page.dart';
 
 void main() => runApp(Application());

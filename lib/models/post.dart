@@ -21,6 +21,18 @@ class Post {
 }
 
 // fetch api
+Future<List<Post>> fetchPosts() async {
+  final response = await http.get("https://jsonplaceholder.typicode.com/posts");
+  if (response.statusCode == 200) {
+    List jsonResponse = json.decode(response.body);
+    return jsonResponse.map((json) {
+      return Post.fromJson(json);
+    }).toList();
+  } else {
+    throw Exception("Error");
+  }
+}
+
 Future fetchPost(int id) async {
   final response =
       await http.get("https://jsonplaceholder.typicode.com/posts/${id}");

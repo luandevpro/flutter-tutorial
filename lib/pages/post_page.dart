@@ -4,8 +4,7 @@ import 'package:fluttertutorial/models/post.dart';
 class PostPage extends StatelessWidget {
   final int id;
 
-  // const PostPage(this.id, {Key key}) : super(key: key);
-  const PostPage(this.id, {Key key}) : super(key: key);
+  const PostPage(this.id);
 
   @override
   Widget build(BuildContext context) {
